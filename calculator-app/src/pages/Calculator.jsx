@@ -24,8 +24,8 @@ export const Calculator = () => {
   }
 
   const addOperatorToScreen = (param) => {
+
     if (operator == '' && secondValue == '') {
-      setPreviousResult(result);
       setResult('');
       operator += param;
       setOperator(operator);
@@ -35,26 +35,27 @@ export const Calculator = () => {
     }
   }
 
-  const doCalculation = (param) => {
-    debugger;
+  const doCalculation = () => {
     if (secondValue != '') {
       if (firstValue == '' && previousResult != '') {
         const result = MathActions.resultAction(Number(previousResult), Number(secondValue), operator);
         setFirstValue('');
         setOperator('');
         setSecondValue('');
-        setResult(result);
+        setResult();
+        setPreviousResult(result);
       } else {
         const result = MathActions.resultAction(Number(firstValue), Number(secondValue), operator);
         setFirstValue('');
         setOperator('');
         setSecondValue('');
-        setResult(result);
+        setResult();
+        setPreviousResult(result);
       }
     }
   }
 
-  const clearScreen = (param) => {
+  const clearScreen = () => {
     setFirstValue('');
     setOperator('');
     setSecondValue('');
@@ -63,7 +64,21 @@ export const Calculator = () => {
   }
 
   const deleteLastValue = (param) => {
-  }
+    let str;
+    let size = 0;
+    
+    if (secondValue !=''){
+      setSecondValue(secondValue.slice(0,secondValue.length-1));
+    }else{
+      if(operator != '') {
+        setOperator('');
+      }else{
+        if(firstValue !=''){
+          setFirstValue(firstValue.slice(0,secondValue.length-1));
+        }
+      }
+    }
+   }
 
   return (
     <div className="calculator-grid">
@@ -71,8 +86,8 @@ export const Calculator = () => {
         <div className="previous-operand">{previousResult}</div>
         <div className="current-operand">{result}{firstValue}{operator}{secondValue}</div>
       </div>
-      <button className="span-two" onClick={(event) => { clearScreen('AC'); }} >AC</button>
-      <button >DEL</button>
+      <button className="span-two" onClick={(event) => { clearScreen(); }} >AC</button>
+      <button onClick={(event) => { deleteLastValue(); }} >DEL</button>
       <button onClick={(event) => { addOperatorToScreen('%'); }}>%</button>
       <button onClick={(event) => { addDigitToScreen(7); }} >7</button>
       <button onClick={(event) => { addDigitToScreen(8); }} >8</button>
@@ -88,7 +103,7 @@ export const Calculator = () => {
       <button onClick={(event) => { addOperatorToScreen('-'); }} >-</button>
       <button onClick={(event) => { addDigitToScreen('.'); }} >.</button>
       <button onClick={(event) => { addDigitToScreen(0); }} >0</button>
-      <button className="span-two" onClick={(event) => { doCalculation('='); }} >=</button>
+      <button className="span-two" onClick={(event) => { doCalculation(); }} >=</button>
     </div>
   )
 }
